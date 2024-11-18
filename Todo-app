@@ -1,0 +1,101 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+
+export default function ThirioApp() {
+  const [balance, setBalance] = useState(1000); // Starting balance of 1000 (virtual money)
+  const [amount, setAmount] = useState('');
+
+  const addFunds = () => {
+    const addedAmount = parseFloat(amount);
+    if (isNaN(addedAmount) || addedAmount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid positive number.');
+      return;
+    }
+    setBalance(prevBalance => prevBalance + addedAmount);
+    setAmount('');
+    Alert.alert('Success', `Added ${addedAmount} to your balance.`);
+  };
+
+  const sendMoney = () => {
+    const sentAmount = parseFloat(amount);
+    if (isNaN(sentAmount) || sentAmount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid positive number.');
+      return;
+    }
+    if (sentAmount > balance) {
+      Alert.alert('Insufficient Funds', 'You do not have enough balance to send this amount.');
+      return;
+    }
+    setBalance(prevBalance => prevBalance - sentAmount);
+    setAmount('');
+    Alert.alert('Success', `Sent ${sentAmount} from your account.`);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Θηρίο Banking</Text>
+      <Text style={styles.balance}>Balance: €{balance.toFixed(2)}</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setAmount}
+        value={amount}
+        placeholder="Enter amount"
+        keyboardType="numeric"
+        placeholderTextColor="#A0AEC0"
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={addFunds}>
+          <Text style={styles.buttonText}>Add Funds</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={sendMoney}>
+          <Text style={styles.buttonText}>Send Money</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2B6CB0', // Blue background
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 20,
+  },
+  balance: {
+    fontSize: 22,
+    color: '#FFFFFF',
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#4299E1',
+    padding: 15,
+    borderRadius: 5,
+    width: '48%',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+});
