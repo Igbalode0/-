@@ -1,0 +1,96 @@
+import { useState } from 'react';
+
+export default function ThirioApp() {
+  const [balance, setBalance] = useState(1000); // Starting balance of 1000 (virtual money)
+  const [amount, setAmount] = useState('');
+
+  const addFunds = () => {
+    const addedAmount = parseFloat(amount);
+    if (isNaN(addedAmount) || addedAmount <= 0) {
+      alert('Invalid Amount. Please enter a valid positive number.');
+      return;
+    }
+    setBalance(prevBalance => prevBalance + addedAmount);
+    setAmount('');
+    alert(`Success! Added €${addedAmount.toFixed(2)} to your balance.`);
+  };
+
+  const sendMoney = () => {
+    const sentAmount = parseFloat(amount);
+    if (isNaN(sentAmount) || sentAmount <= 0) {
+      alert('Invalid Amount. Please enter a valid positive number.');
+      return;
+    }
+    if (sentAmount > balance) {
+      alert('Insufficient Funds. You do not have enough balance to send this amount.');
+      return;
+    }
+    setBalance(prevBalance => prevBalance - sentAmount);
+    setAmount('');
+    alert(`Success! Sent €${sentAmount.toFixed(2)} from your account.`);
+  };
+
+  return (
+    <div style={styles.container}>
+      <h1 style={styles.title}>Θηρίο Banking</h1>
+      <p style={styles.balance}>Balance: €{balance.toFixed(2)}</p>
+      <input
+        style={styles.input}
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        placeholder="Enter amount"
+      />
+      <div style={styles.buttonContainer}>
+        <button style={styles.button} onClick={addFunds}>Add Funds</button>
+        <button style={styles.button} onClick={sendMoney}>Send Money</button>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    textAlign: 'center',
+    fontFamily: 'Arial, sans-serif',
+    padding: '20px',
+    maxWidth: '400px',
+    margin: 'auto',
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+  },
+  title: {
+    fontSize: '24px',
+    marginBottom: '20px',
+    color: '#333',
+  },
+  balance: {
+    fontSize: '18px',
+    marginBottom: '20px',
+    color: '#0070f3',
+  },
+  input: {
+    width: '100%',
+    padding: '10px',
+    marginBottom: '10px',
+    fontSize: '16px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  button: {
+    flex: 1,
+    margin: '0 5px',
+    padding: '10px',
+    fontSize: '16px',
+    backgroundColor: '#0070f3',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+};
